@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_AsIs" targetNamespace="https://portfolio.example/bpmn">
+  <process id="ClientOnboarding_AsIs" name="Client Onboarding - As Is" isExecutable="false">
+    <startEvent id="StartEvent_1" name="Client agrees to onboard"><outgoing>Flow_1</outgoing></startEvent>
+    <task id="Task_Sales" name="Sales collects client data"><incoming>Flow_1</incoming><outgoing>Flow_2</outgoing></task>
+    <task id="Task_Ops" name="Operations re-enters data"><incoming>Flow_2</incoming><outgoing>Flow_3</outgoing></task>
+    <task id="Task_Compliance" name="Compliance reviews shared inbox"><incoming>Flow_3</incoming><outgoing>Flow_4</outgoing></task>
+    <exclusiveGateway id="Gateway_Complete" name="Evidence complete?"><incoming>Flow_4</incoming><outgoing>Flow_5</outgoing><outgoing>Flow_6</outgoing></exclusiveGateway>
+    <task id="Task_Rework" name="Request missing evidence by email"><incoming>Flow_6</incoming><outgoing>Flow_7</outgoing></task>
+    <task id="Task_Finance" name="Finance creates account"><incoming>Flow_5</incoming><incoming>Flow_7</incoming><outgoing>Flow_8</outgoing></task>
+    <endEvent id="EndEvent_1" name="Onboarding complete"><incoming>Flow_8</incoming></endEvent>
+    <sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_Sales"/>
+    <sequenceFlow id="Flow_2" sourceRef="Task_Sales" targetRef="Task_Ops"/>
+    <sequenceFlow id="Flow_3" sourceRef="Task_Ops" targetRef="Task_Compliance"/>
+    <sequenceFlow id="Flow_4" sourceRef="Task_Compliance" targetRef="Gateway_Complete"/>
+    <sequenceFlow id="Flow_5" name="Yes" sourceRef="Gateway_Complete" targetRef="Task_Finance"/>
+    <sequenceFlow id="Flow_6" name="No" sourceRef="Gateway_Complete" targetRef="Task_Rework"/>
+    <sequenceFlow id="Flow_7" sourceRef="Task_Rework" targetRef="Task_Finance"/>
+    <sequenceFlow id="Flow_8" sourceRef="Task_Finance" targetRef="EndEvent_1"/>
+  </process>
+</definitions>

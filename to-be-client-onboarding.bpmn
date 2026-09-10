@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_ToBe" targetNamespace="https://portfolio.example/bpmn">
+  <process id="ClientOnboarding_ToBe" name="Client Onboarding - To Be" isExecutable="false">
+    <startEvent id="Start" name="Client onboarding request"><outgoing>F1</outgoing></startEvent>
+    <task id="Capture" name="Capture client data once"><incoming>F1</incoming><outgoing>F2</outgoing></task>
+    <exclusiveGateway id="Complete" name="Mandatory data complete?"><incoming>F2</incoming><outgoing>F3</outgoing><outgoing>F4</outgoing></exclusiveGateway>
+    <task id="Return" name="Return incomplete case to relationship owner"><incoming>F4</incoming><outgoing>F5</outgoing></task>
+    <serviceTask id="Screen" name="Automated screening and case creation"><incoming>F3</incoming><incoming>F5</incoming><outgoing>F6</outgoing></serviceTask>
+    <exclusiveGateway id="Exception" name="Specialist exception?"><incoming>F6</incoming><outgoing>F7</outgoing><outgoing>F8</outgoing></exclusiveGateway>
+    <task id="Specialist" name="Resolve specialist exception"><incoming>F8</incoming><outgoing>F9</outgoing></task>
+    <task id="Compliance" name="Compliance decision"><incoming>F7</incoming><incoming>F9</incoming><outgoing>F10</outgoing></task>
+    <exclusiveGateway id="Approved" name="Approved?"><incoming>F10</incoming><outgoing>F11</outgoing><outgoing>F12</outgoing></exclusiveGateway>
+    <task id="Remediate" name="Request targeted remediation"><incoming>F12</incoming><outgoing>F13</outgoing></task>
+    <task id="Finance" name="Finance setup"><incoming>F11</incoming><incoming>F13</incoming><outgoing>F14</outgoing></task>
+    <task id="Handover" name="Operational handover"><incoming>F14</incoming><outgoing>F15</outgoing></task>
+    <endEvent id="End" name="Onboarding complete"><incoming>F15</incoming></endEvent>
+    <sequenceFlow id="F1" sourceRef="Start" targetRef="Capture"/>
+    <sequenceFlow id="F2" sourceRef="Capture" targetRef="Complete"/>
+    <sequenceFlow id="F3" name="Yes" sourceRef="Complete" targetRef="Screen"/>
+    <sequenceFlow id="F4" name="No" sourceRef="Complete" targetRef="Return"/>
+    <sequenceFlow id="F5" sourceRef="Return" targetRef="Screen"/>
+    <sequenceFlow id="F6" sourceRef="Screen" targetRef="Exception"/>
+    <sequenceFlow id="F7" name="No" sourceRef="Exception" targetRef="Compliance"/>
+    <sequenceFlow id="F8" name="Yes" sourceRef="Exception" targetRef="Specialist"/>
+    <sequenceFlow id="F9" sourceRef="Specialist" targetRef="Compliance"/>
+    <sequenceFlow id="F10" sourceRef="Compliance" targetRef="Approved"/>
+    <sequenceFlow id="F11" name="Yes" sourceRef="Approved" targetRef="Finance"/>
+    <sequenceFlow id="F12" name="No" sourceRef="Approved" targetRef="Remediate"/>
+    <sequenceFlow id="F13" sourceRef="Remediate" targetRef="Finance"/>
+    <sequenceFlow id="F14" sourceRef="Finance" targetRef="Handover"/>
+    <sequenceFlow id="F15" sourceRef="Handover" targetRef="End"/>
+  </process>
+</definitions>
